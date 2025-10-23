@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中達公司橡膠培訓課程 - 橡膠配方測驗(04)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        #quiz-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+        }
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px 25px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        #quiz-body {
+            padding: 25px;
+        }
+        #question-container {
+            margin-bottom: 20px;
+        }
+        #question-text {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        #answer-options button {
+            display: block;
+            width: 100%;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        #answer-options button:hover:not(:disabled) {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        #answer-options button:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+        .correct {
+            background-color: #d4edda !important;
+            border-color: #c3e6cb !important;
+            color: #155724 !important;
+            font-weight: bold;
+        }
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #f5c6cb !important;
+            color: #721c24 !important;
+            font-weight: bold;
+        }
+        #feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.95em;
+            line-height: 1.5;
+            display: none; /* 預設隱藏 */
+        }
+        #feedback.correct-feedback {
+            background-color: #e6f7ff;
+            border: 1px solid #b3e0ff;
+            color: #0056b3;
+        }
+        #feedback.incorrect-feedback {
+            background-color: #fff0f1;
+            border: 1px solid #ffd6d9;
+            color: #d9001b;
+        }
+        #controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px 25px;
+        }
+        #progress-text {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        #next-btn, #restart-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: none; /* 預設隱藏 */
+        }
+        #next-btn:hover, #restart-btn:hover {
+            background-color: #0056b3;
+        }
+        #results-container {
+            padding: 30px;
+            text-align: center;
+            display: none; /* 預設隱藏 */
+        }
+        #results-container h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        #results-container p {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="quiz-container">
+        <header>
+            <h1 id="quiz-title">中達公司橡膠培訓課程 - 橡膠配方測驗(04)</h1>
+        </header>
+        
+        <div id="quiz-body">
+            <div id="question-container">
+                <p id="question-text"></p>
+                <div id="answer-options"></div>
+            </div>
+            <div id="feedback"></div>
+        </div>
+
+        <div id="controls">
+            <span id="progress-text"></span>
+            <button id="next-btn">下一題</button>
+        </div>
+
+        <div id="results-container">
+            <h2>測驗完成！</h2>
+            <p id="score-text"></p>
+            <button id="restart-btn">重新測驗</button>
+        </div>
+    </div>
+
+    <script>
+        // Python 會將 JSON 物件注入到這裡
+        const quizData = {"questions": [{"questionNumber": 1, "question": "根據 ASTM D2000 標準，用於劃分橡膠材料「Type」的主要依據是什麼？", "answerOptions": [{"text": "A. 壓縮變形率", "isCorrect": false, "rationale": "不正確。Type 的分類依據與熱有關。"}, {"text": "B. 耐臭氧性", "isCorrect": false, "rationale": "不正確。Type 的分類依據與熱有關。"}, {"text": "C. 耐熱性", "isCorrect": true, "rationale": "答對了。說明： Type 是基於材料在特定溫度下熱老化 70 小時後的物理性質變化來決定的，因此依據是耐熱性。"}, {"text": "D. 耐油性", "isCorrect": false, "rationale": "不正確。耐油性是用來劃分「Class」。"}], "hint": "請回想 ASTM D2000 中「Type」和「Class」的分類依據。"}, {"questionNumber": 2, "question": "在 ASTM D2000 的材料標示中，如果一個材料被分類為「BC」，這代表什麼？", "answerOptions": [{"text": "A. 耐熱溫度為 100°C 且耐油等級的體積膨脹率上限為 100%", "isCorrect": false, "rationale": "耐熱溫度 100°C (B) 是正確的，但耐油等級 (C) 的膨脹率不符。"}, {"text": "B. 耐熱溫度為 100°C 且耐油等級的體積膨脹率上限為 120%", "isCorrect": true, "rationale": "答對了。說明： 根據 ASTM D2000，「B」對應的 Type 測試溫度為 100°C；「C」對應的 Class 耐油等級體積膨脹率上限為 120%。"}, {"text": "C. 耐熱溫度為 125°C 且耐油等級的體積膨脹率上限為 140%", "isCorrect": false, "rationale": "耐熱溫度 (B) 和耐油等級 (C) 的對應值都不正確。"}, {"text": "D. 耐熱溫度為 70°C 且耐油等級的體積膨脹率上限為 120%", "isCorrect": false, "rationale": "耐油等級 120% (C) 是正確的，但耐熱溫度 (B) 的對應值不正確。"}], "hint": "第一個字母「B」代表 Type (耐熱性)，第二個字母「C」代表 Class (耐油性)。"}, {"questionNumber": 3, "question": "根據 ASTM D1418 命名法，哪一類橡膠的主鏈含有氮原子？", "answerOptions": [{"text": "A. M類橡膠", "isCorrect": false, "rationale": "不正確。M 類的主鏈是飽和的聚乙烯類型。"}, {"text": "B. R類橡膠", "isCorrect": false, "rationale": "不正確。R 類的主鏈含有不飽和碳鍵，如 NR、SBR。"}, {"text": "C. Q類橡膠", "isCorrect": false, "rationale": "不正確。Q 類是矽氧橡膠。"}, {"text": "D. N類橡膠", "isCorrect": true, "rationale": "答對了。說明： N 代表含氮 (Nitrogen) 橡膠，例如丁腈橡膠 (NBR) 和氫化丁腈橡膠 (HNBR)。"}], "hint": "請思考 NBR 這類橡膠的化學名稱。"}, {"questionNumber": 4, "question": "在橡膠原材料分類標準 ASTM D5899 中，「Sulfenamides」（亞磺胺類）屬於哪一個功能分類？", "answerOptions": [{"text": "A. 填充劑 (Fillers)", "isCorrect": false, "rationale": "不正確。填充劑是像碳黑或白炭黑。"}, {"text": "B. 抗老化劑 (Antidegradants)", "isCorrect": false, "rationale": "不正確。抗老化劑是用於防止老化。"}, {"text": "C. 促進劑 (Accelerators)", "isCorrect": true, "rationale": "答對了。說明： 亞磺胺類 (Sulfenamides) 是常見的硫化促進劑，用於控制硫化反應的速度和起始時間。"}, {"text": "D. 硫化劑 (Vulcanizing Agents)", "isCorrect": false, "rationale": "不正確。硫化劑通常是指硫磺 (Sulphur)。"}], "hint": "亞磺胺類在硫化反應中扮演什麼角色？"}, {"questionNumber": 5, "question": "天然橡膠 (NR) 相較於多數合成橡膠，其哪一項性能是主要的缺點？", "answerOptions": [{"text": "A. 耐強酸", "isCorrect": false, "rationale": "不正確。多數橡膠都不耐強酸。"}, {"text": "B. 在空氣中容易老化", "isCorrect": true, "rationale": "答對了。說明： 天然橡膠分子鏈中含有不飽和雙鍵，容易受到氧和臭氧的攻擊而發生降解，因此在空氣中容易老化。"}, {"text": "C. 彈性很差", "isCorrect": false, "rationale": "不正確。天然橡膠的彈性非常好。"}, {"text": "D. 耐磨性不佳", "isCorrect": false, "rationale": "不正確。天然橡膠的耐磨性相當不錯。"}], "hint": "考慮天然橡膠的化學結構（不飽和雙鍵）。"}, {"questionNumber": 6, "question": "哪一種測試標準是用於檢測橡膠的「硬度」？", "answerOptions": [{"text": "A. ASTM D471", "isCorrect": false, "rationale": "不正確。這是耐液體測試標準。"}, {"text": "B. ASTM D395", "isCorrect": false, "rationale": "不正確。這是壓縮永久變形測試標準。"}, {"text": "C. ASTM D2240", "isCorrect": true, "rationale": "答對了。說明： ASTM D2240 是專門用來測量橡膠邵氏硬度 (Durometer) 的標準。"}, {"text": "D. ASTM D412", "isCorrect": false, "rationale": "不正確。這是拉伸試驗標準。"}], "hint": "邵氏硬度 (Durometer) 對應的標準是？"}, {"questionNumber": 7, "question": "在進行 ASTM D412 拉伸試驗時，通常使用哪種形狀的試片？", "answerOptions": [{"text": "A. 啞鈴形 (Dumbbell)", "isCorrect": true, "rationale": "答對了。說明： 啞鈴形試片是 ASTM D412 標準中用於拉伸強度和伸長率測試的標準形狀。"}, {"text": "B. 三角形 (Triangular)", "isCorrect": false, "rationale": "不正確。這不是 D412 的標準試片形狀。"}, {"text": "C. 圓盤形 (Disk)", "isCorrect": false, "rationale": "不正確。圓盤形試片常用於壓縮永久變形 (D395) 測試。"}, {"text": "D. 褲形 (Trouser)", "isCorrect": false, "rationale": "不正確。褲形試片常用於撕裂測試 (D624)。"}], "hint": "拉伸試驗最常用的試片形狀是什麼？"}, {"questionNumber": 8, "question": "ASTM D395 標準主要用來評估橡膠的哪一項性能？", "answerOptions": [{"text": "A. 動態疲勞", "isCorrect": false, "rationale": "不正確。動態疲勞有其他的測試標準。"}, {"text": "B. 低溫脆化", "isCorrect": false, "rationale": "不正確。低溫脆化有其他的測試標準。"}, {"text": "C. 抗撕裂強度", "isCorrect": false, "rationale": "不正確。抗撕裂強度是 D624。"}, {"text": "D. 壓縮永久變形", "isCorrect": true, "rationale": "答對了。說明： ASTM D395 測量橡膠在持續壓縮後無法恢復其原始厚度的程度，即壓縮永久變形。"}], "hint": "這個標準是關於橡膠在壓縮後的恢復能力。"}, {"questionNumber": 9, "question": "根據 ASTM D5899，碳黑 (Carbon blacks) 和白炭黑 (Silicas) 被歸類為哪一種橡膠混煉材料？", "answerOptions": [{"text": "A. 偶合劑", "isCorrect": false, "rationale": "不正確。偶合劑是用來連結填料和橡膠基材。"}, {"text": "B. 加工油/加工助劑", "isCorrect": false, "rationale": "不正確。加工油是用來改善加工性或降低成本。"}, {"text": "C. 硫化活化劑", "isCorrect": false, "rationale": "不正確。硫化活化劑是像氧化鋅和硬脂酸。"}, {"text": "D. 填料、增量劑和補強劑", "isCorrect": true, "rationale": "答對了。說明： 碳黑和白炭黑是橡膠工業中最主要的補強劑和填料，用以提升機械性能。"}], "hint": "碳黑和白炭黑在橡膠配方中的主要功能是什麼？"}, {"questionNumber": 10, "question": "丁二烯橡膠 (BR) 的哪一項優點使其廣泛應用於輪胎製造？", "answerOptions": [{"text": "A. 耐油性好", "isCorrect": false, "rationale": "不正確。BR 的耐油性不佳。"}, {"text": "B. 耐磨耗性優秀", "isCorrect": true, "rationale": "答對了。說明： 丁二烯橡膠 (BR) 具有優秀的耐磨耗性，使其成為輪胎胎面的重要成分。"}, {"text": "C. 加工性佳", "isCorrect": false, "rationale": "不正確。BR 的加工性（尤其是純膠）通常不佳。"}, {"text": "D. 抗拉強度高", "isCorrect": false, "rationale": "不正確。BR 的抗拉強度較低。"}], "hint": "BR 特別適用於輪胎的哪個部分？"}, {"questionNumber": 11, "question": "ASTM D471 測試的目的是評估橡膠材料的什麼特性？", "answerOptions": [{"text": "A. 熱空氣老化性能", "isCorrect": false, "rationale": "不正確。熱空氣老化是 D573 或 D865。"}, {"text": "B. 耐液體影響性", "isCorrect": true, "rationale": "答對了。說明： ASTM D471 測試的目的是評估橡膠浸泡在油、燃料等液體後的性能變化，即耐液體影響性。"}, {"text": "C. 表面污染性", "isCorrect": false, "rationale": "不正確。這有其他的測試標準。"}, {"text": "D. 與硬質基材的接著力", "isCorrect": false, "rationale": "不正確。這是接著力測試。"}], "hint": "這個測試通常涉及將橡膠浸泡在特定液體中。"}, {"questionNumber": 12, "question": "在 ASTM D2000 標準中，後綴字母 (Suffix Letter) 'F' 通常代表哪一方面的特殊要求？", "answerOptions": [{"text": "A. 耐液體性 (Fluid Resistance)", "isCorrect": false, "rationale": "不正確。耐液體性是由 'Class' 字母和 'E' 系列後綴字母決定的。"}, {"text": "B. 耐撕裂性 (Tear Resistance)", "isCorrect": false, "rationale": "不正確。耐撕裂性是由後綴字母 'G' 代表。"}, {"text": "C. 耐低溫性 (Low-Temperature Resistance)", "isCorrect": true, "rationale": "答對了。說明： 在 ASTM D2000 的後綴字母中，'F' 代表耐低溫性要求。"}, {"text": "D. 耐燃性 (Flammability Resistance)", "isCorrect": false, "rationale": "不正確。耐燃性是由後綴字母 'M' 代表。"}], "hint": "思考 D2000 後綴字母的含義。"}, {"questionNumber": 13, "question": "根據 ASTM D1566 對「橡膠」的定義，以下哪項描述是正確的？", "answerOptions": [{"text": "A. 能在拉伸至兩倍長度後，於 1 分鐘內收縮至原始長度的 1.5 倍以下", "isCorrect": true, "rationale": "答對了。說明： 這是 ASTM D1566 對橡膠彈性恢復能力的明確量化定義。"}, {"text": "B. 在室溫下拉伸至三倍長度後仍能恢復", "isCorrect": false, "rationale": "不正確。定義中明確規定了拉伸倍數和恢復程度。"}, {"text": "C. 是一種從大變形中緩慢恢復的材料", "isCorrect": false, "rationale": "不正確。橡膠的特性是能「快速」恢復。"}, {"text": "D. 可完全溶解於沸騰的苯溶劑中", "isCorrect": false, "rationale": "不正確。硫化後的橡膠是交聯的，不會溶解，只會溶脹。"}], "hint": "橡膠的定義與其彈性恢復能力有關。"}, {"questionNumber": 14, "question": "丁苯橡膠 (SBR) 相較於天然橡膠 (NR)，其主要優點是什麼？", "answerOptions": [{"text": "A. 機械強度更強", "isCorrect": false, "rationale": "不正確。SBR 的純膠強度遠低於 NR。"}, {"text": "B. 耐寒性更好", "isCorrect": false, "rationale": "不正確。NR 的耐寒性優於 SBR。"}, {"text": "C. 耐老化性與耐熱性較優", "isCorrect": true, "rationale": "答對了。說明： 丁苯橡膠 (SBR) 在抵抗熱和氧的老化方面，耐老化性與耐熱性較天然橡膠優。"}, {"text": "D. 彈性更高", "isCorrect": false, "rationale": "不正確。NR 的彈性優於 SBR。"}], "hint": "SBR 是一種合成橡膠，它在哪些方面彌補了 NR 的不足？"}, {"questionNumber": 15, "question": "在 ASTM D5899 分類中，「Retarders」（延遲劑）的主要功能是什麼？", "answerOptions": [{"text": "A. 增加硫化膠的交聯密度", "isCorrect": false, "rationale": "不正確。這是硫化劑和促進劑的功能。"}, {"text": "B. 加速硫化反應的速度", "isCorrect": false, "rationale": "不正確。這是促進劑 (Accelerators) 的功能。"}, {"text": "C. 降低膠料的黏度以便加工", "isCorrect": false, "rationale": "不正確。這是加工油或塑解劑的功能。"}, {"text": "D. 防止膠料在加工過程中發生早期硫化（焦燒）", "isCorrect": true, "rationale": "答對了。說明： 延遲劑或防焦劑 (Retarders) 的作用是抑制硫化反應，給予足夠的加工時間，防止焦燒。"}], "hint": "延遲劑與「焦燒」有什麼關係？"}, {"questionNumber": 16, "question": "ASTM D624 是用來測試橡膠的哪一種物理性能？", "answerOptions": [{"text": "A. 耐磨耗性", "isCorrect": false, "rationale": "不正確。耐磨耗性有其他的測試標準。"}, {"text": "B. 耐屈撓龜裂性", "isCorrect": false, "rationale": "不正確。這是 D430 或 D813。"}, {"text": "C. 回彈性", "isCorrect": false, "rationale": "不正確。這是 D1054 或 D2632。"}, {"text": "D. 抗撕裂強度", "isCorrect": true, "rationale": "答對了。說明： ASTM D624 專門用來測量橡膠抵抗裂口擴展的能力，即抗撕裂強度。"}], "hint": "這個標準測量的是抵抗裂口擴展的能力。"}, {"questionNumber": 17, "question": "根據 ASTM D2000 的分類圖表，「FKM」（氟橡膠）通常用來滿足哪一類型的材料要求？", "answerOptions": [{"text": "A. HK", "isCorrect": true, "rationale": "答對了。說明： FKM (氟橡膠) 以其卓越的耐高溫和耐油性聞名，滿足 D2000 中最高等級的 HK（H=250°C, K=體積膨脹率 <10%) 要求。"}, {"text": "B. BC", "isCorrect": false, "rationale": "不正確。BC (100°C, 120% 膨脹) 是較低的要求，通常由 NBR 滿足。"}, {"text": "C. DF", "isCorrect": false, "rationale": "不正確。DF (125°C, 60% 膨脹) 通常由 HNBR 或 AEM 滿足。"}, {"text": "D. AA", "isCorrect": false, "rationale": "不正確。AA (70°C, 無耐油要求) 是最低的要求，通常由 NR 或 SBR 滿足。"}], "hint": "FKM 以其優異的耐高溫和耐油性而聞名。"}, {"questionNumber": 18, "question": "在橡膠配方中，氧化鋅 (Zinc oxide) 和硬脂酸 (Stearic acid) 通常扮演什麼角色？", "answerOptions": [{"text": "A. 塑解劑", "isCorrect": false, "rationale": "不正確。塑解劑是用來降低生膠黏度。"}, {"text": "B. 硫化活化劑", "isCorrect": true, "rationale": "答對了。說明： 氧化鋅和硬脂酸協同作用形成鋅皂，能活化硫化促進劑，是硫化反應中不可缺少的活化體系。"}, {"text": "C. 抗老化劑", "isCorrect": false, "rationale": "不正確。抗老化劑是 PPDs, TMQ 等。"}, {"text": "D. 補強劑", "isCorrect": false, "rationale": "不正確。補強劑是碳黑或白炭黑。"}], "hint": "這兩者是硫磺硫化體系中常見的組合。"}, {"questionNumber": 19, "question": "聚異戊二烯 (IR) 相較於天然橡膠 (NR)，其主要的優點是什麼？", "answerOptions": [{"text": "A. 耐候性更好", "isCorrect": false, "rationale": "不正確。IR 和 NR 的化學結構幾乎相同，耐候性都不佳。"}, {"text": "B. 品質均勻且雜質少", "isCorrect": true, "rationale": "答對了。說明： 聚異戊二烯 (IR) 是化學合成的，相較於天然橡膠，具有品質純度高、批次差異小、雜質少的優點。"}, {"text": "C. 成本更低", "isCorrect": false, "rationale": "不正確。合成橡膠 (IR) 的成本通常高於天然橡膠 (NR)。"}, {"text": "D. 拉伸強度更高", "isCorrect": false, "rationale": "不正確。由於立體規整性，NR 的拉伸強度（尤其是純膠）通常優於 IR。"}], "hint": "IR 是 NR 的合成版本，它在「合成」方面有什麼優勢？"}, {"questionNumber": 20, "question": "ASTM D865 是哪一種測試方法的變體，且提供了更嚴苛的測試條件？", "answerOptions": [{"text": "A. 熱老化試驗-空氣烘箱法 (ASTM D573)", "isCorrect": true, "rationale": "答對了。說明： ASTM D865（試管法）提供了比 ASTM D573（空氣烘箱法）更嚴苛的熱老化條件。"}, {"text": "B. 硬度測試法 (ASTM D2240)", "isCorrect": false, "rationale": "不正確。這與硬度測試無關。"}, {"text": "C. 耐液性試驗 (ASTM D471)", "isCorrect": false, "rationale": "不正確。這與耐液性試驗無關。"}, {"text": "D. 壓縮變形試驗 (ASTM D395)", "isCorrect": false, "rationale": "不正確。這與壓縮變形試驗無關。"}], "hint": "D865 和 D573 都是關於熱老化的測試。"}]};
+
+        const quizBody = document.getElementById('quiz-body');
+        const questionText = document.getElementById('question-text');
+        const answerOptions = document.getElementById('answer-options');
+        const feedback = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const progressText = document.getElementById('progress-text');
+        const controls = document.getElementById('controls');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreText = document.getElementById('score-text');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questions = quizData.questions;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            // 隨機打亂題目順序 (如果需要)
+            // questions = quizData.questions.sort(() => Math.random() - 0.5);
+            
+            // 根據您的要求，不打亂題目順序
+            questions = quizData.questions;
+
+            quizBody.style.display = 'block';
+            controls.style.display = 'flex';
+            resultsContainer.style.display = 'none';
+            nextBtn.style.display = 'none';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            resetState();
+            const question = questions[currentQuestionIndex];
+            questionText.innerText = question.question;
+            progressText.innerText = `第 ${currentQuestionIndex + 1} / ${questions.length} 題`;
+
+            // 根據您的要求，不打亂選項順序
+            const options = question.answerOptions;
+            
+            // 如果需要打亂選項順序，取消註解下一行
+            // const options = question.answerOptions.sort(() => Math.random() - 0.5);
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option.text;
+                button.dataset.correct = option.isCorrect;
+                button.dataset.rationale = option.rationale;
+                button.addEventListener('click', selectAnswer);
+                answerOptions.appendChild(button);
+            });
+        }
+
+        function resetState() {
+            feedback.style.display = 'none';
+            feedback.className = 'feedback';
+            nextBtn.style.display = 'none';
+            while (answerOptions.firstChild) {
+                answerOptions.removeChild(answerOptions.firstChild);
+            }
+        }
+
+        function selectAnswer(e) {
+            const selectedButton = e.target;
+            const isCorrect = selectedButton.dataset.correct === 'true';
+            const rationale = selectedButton.dataset.rationale;
+
+            if (isCorrect) {
+                score++;
+                selectedButton.classList.add('correct');
+                feedback.className = 'correct-feedback';
+                feedback.innerText = rationale;
+            } else {
+                selectedButton.classList.add('incorrect');
+                feedback.className = 'incorrect-feedback';
+                feedback.innerText = rationale;
+            }
+            
+            feedback.style.display = 'block';
+
+            // 顯示正確答案
+            Array.from(answerOptions.children).forEach(button => {
+                if (button.dataset.correct === 'true' && !isCorrect) {
+                    button.classList.add('correct');
+                }
+                button.disabled = true; // 禁用所有按鈕
+            });
+
+            // 顯示下一題按鈕
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.style.display = 'block';
+            } else {
+                // 這是最後一題
+                setTimeout(showResults, 1000); // 延遲 1 秒顯示結果
+            }
+        }
+
+        function showResults() {
+            quizBody.style.display = 'none';
+            controls.style.display = 'none';
+            resultsContainer.style.display = 'block';
+            restartBtn.style.display = 'inline-block';
+            scoreText.innerText = `您的得分： ${score} / ${questions.length}`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            loadQuestion();
+        });
+
+        restartBtn.addEventListener('click', startQuiz);
+
+        // 啟動測驗
+        startQuiz();
+    </script>
+
+</body>
+</html>
